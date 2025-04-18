@@ -1,4 +1,5 @@
 mod dialog;
+mod filter;
 
 use bevy::{
   asset::RenderAssetUsages,
@@ -6,12 +7,15 @@ use bevy::{
   render::render_resource::{Extent3d, TextureDimension, TextureFormat},
 };
 
+use bevy_egui::{EguiContexts, EguiPlugin, egui};
+
 fn main() {
   App::new()
     .add_plugins(DefaultPlugins)
     .add_plugins(dialog::plugin)
+    .add_plugins(EguiPlugin)
     .add_systems(Startup, setup)
-    .add_systems(Update, (pick, update))
+    .add_systems(Update, (pick, update, ui))
     .run();
 }
 
@@ -63,10 +67,15 @@ fn update(
   for Open { content } in events.read() {
     if let Ok(dynamic) = image::load_from_memory(&content) {
       let Some(image) = images.get_mut(process.id()) else { continue };
-
       let dynamic = dynamic.resize_exact(dim::W, dim::H, FilterType::Nearest);
 
       *image = Image::from_dynamic(dynamic, true, render_usage());
     }
   }
+}
+
+fn ui(mut contexts: EguiContexts) {
+  egui::Window::new("Filters").resizable(true).show(contexts.ctx_mut(), |ui| {
+    ui.label("sosal?");
+  });
 }
