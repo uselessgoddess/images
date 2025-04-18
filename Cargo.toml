@@ -1,0 +1,10 @@
+[package]
+name = "images"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = "0.15"
+rfd = "0.15"
+
+crossbeam-channel = "0.5.14"
